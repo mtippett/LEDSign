@@ -1,3 +1,4 @@
 - Add Makefile
 - Document Protocol
 - Describe Reverse Engineering Protocol
+- Parameterize Device, Strings, etc.
