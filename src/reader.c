@@ -45,7 +45,8 @@ int main(void){
 					printf("] [%d]\n",protocount);
 				        protocount=0;	
 //					printf("<%2.2d>\n", elapsedTime);
-					printf ("[",count);
+//					printf ("[",count);
+					printf ("[");
 				} else {
 					printf("] [%d]\n",protocount);
 				        protocount=0;	
