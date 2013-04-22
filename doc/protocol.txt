@@ -1,0 +1,1 @@
+This describes the reverse engineered LED Sign Protocol.
