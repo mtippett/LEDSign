@@ -97,7 +97,7 @@ int main(int argc, char **argv){
 				if (elapsedTime <1000)  {
 					printf("] [%d]\n",protocount);
 				        protocount=0;	
-//					printf("<%2.2d>\n", elapsedTime);
+					printf("<%2.2d>\n", elapsedTime);
 //					printf ("[",count);
 					printf ("[");
 				} else {
