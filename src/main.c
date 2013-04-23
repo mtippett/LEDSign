@@ -35,20 +35,21 @@ int main(void) {
 
     printf("Write buffer\n");
   
+    sign_proto_write_buffer(testfile, 0, "\\CGM 1", 6, SPEED_1, ACTION_HOLD);
     usleep(COMMAND_STANDOFF);
-    sign_proto_write_buffer(testfile, 0, "\\CRM 1", 6, SPEED_1, ACTION_HOLD);
+    sign_proto_write_buffer(testfile, 1, "\\CYM 2", 6, SPEED_1, ACTION_HOLD);
     usleep(COMMAND_STANDOFF);
-    sign_proto_write_buffer(testfile, 1, "\\CGM 2", 6, SPEED_1, ACTION_HOLD);
+    sign_proto_write_buffer(testfile, 2, "\\CRM 3", 6, SPEED_1, ACTION_SNOW);
     usleep(COMMAND_STANDOFF);
-/*    sign_proto_write_buffer(testfile, 2, "MNOPQR", 6, SPEED_1, ACTION_SNOW);
+    sign_proto_write_buffer(testfile, 3, "\\CGM 4", 6, SPEED_1, ACTION_HOLD);
     usleep(COMMAND_STANDOFF);
-    sign_proto_write_buffer(testfile, 3, "STUVWX", 6, SPEED_1, ACTION_HOLD);
+    sign_proto_write_buffer(testfile, 4, "\\CYM 5", 6, SPEED_1, ACTION_HOLD);
     usleep(COMMAND_STANDOFF);
-*/
-    usleep(COMMAND_STANDOFF);
+    sign_proto_write_buffer(testfile, 5, "\\CRM 6", 6, SPEED_1, ACTION_HOLD);
     usleep(COMMAND_STANDOFF);
     printf("Activate\n");
-    sign_proto_activate(testfile,2);
+    sign_proto_activate(testfile,6);
+    usleep(COMMAND_STANDOFF);
     printf("Close\n");
     close(testfile);
     return 0;
