@@ -3,7 +3,7 @@
 
 #define ATTENTION_DELAY 100000
 /* Have seen standoff of 20-30 ms */
-#define COMMAND_STANDOFF 10000 
+#define COMMAND_STANDOFF 29000 
 
 /* Send ATTENTION, wait ATTENTION_DELAY */
 #define ATTENTION 0x00

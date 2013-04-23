@@ -103,12 +103,12 @@ int main(int argc, char **argv) {
 
     printf("Write buffer\n");
   
-    sign_proto_write_buffer(testfile, 0, "1", 1, SPEED_1, ACTION_HOLD);
+    sign_proto_write_buffer(testfile, 0, "2", 1, SPEED_1, ACTION_HOLD);
     usleep(COMMAND_STANDOFF);
 
-/*    sign_proto_write_buffer(testfile, 1, "\\CYA 2", 6, SPEED_1, ACTION_HOLD);
+    sign_proto_write_buffer(testfile, 1, "3", 1, SPEED_1, ACTION_HOLD);
     usleep(COMMAND_STANDOFF);
-
+/*
     sign_proto_write_buffer(testfile, 2, "\\CRA 3", 6, SPEED_1, ACTION_HOLD);
     usleep(COMMAND_STANDOFF);
 
