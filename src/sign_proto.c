@@ -17,7 +17,7 @@ int sign_proto_attention(int fd) {
 
 int sign_proto_write_buffer(int fd, int slot, char *data_buffer, int length, int speed , int action) {
 	int retval;
-    int index;
+	int index;
 
 	unsigned char buffer [WRITE_BUFFER_LENGTH];
 	unsigned char complete_buffer[WRITE_SOURCE_MAX_LENGTH];
@@ -29,7 +29,6 @@ int sign_proto_write_buffer(int fd, int slot, char *data_buffer, int length, int
         memset(complete_buffer, 0,WRITE_SOURCE_MAX_LENGTH);
 	memcpy(complete_buffer, data_buffer, length);
 	data_buffer_start = buffer + WRITE_BUFFER_OFFSET;
-
 
 	buffer[0] = COMMAND_START;
 	buffer[1] = COMMAND_WRITE_BUFFER;
@@ -48,7 +47,9 @@ int sign_proto_write_buffer(int fd, int slot, char *data_buffer, int length, int
 	memcpy(buffer+8, complete_buffer+ WRITE_SOURCE_1ST_OFFSET,WRITE_SOURCE_1ST_LENGTH);
 	buffer[WRITE_BUFFER_CHECKSUM_OFFSET] = sign_proto_checksum(buffer,WRITE_BUFFER_LENGTH-1); 
 	retval = write(	fd,buffer, WRITE_BUFFER_LENGTH);
-	 
+	if (retval == -1)
+		goto end;
+
   	usleep(COMMAND_STANDOFF);
 
         // Second Line
@@ -56,6 +57,8 @@ int sign_proto_write_buffer(int fd, int slot, char *data_buffer, int length, int
 	memcpy(data_buffer_start,complete_buffer + WRITE_SOURCE_2ND_OFFSET, WRITE_SOURCE_2ND_LENGTH);
 	buffer[WRITE_BUFFER_CHECKSUM_OFFSET] = sign_proto_checksum(buffer,WRITE_BUFFER_LENGTH-1); 
 	retval = write(	fd,buffer, WRITE_BUFFER_LENGTH);
+	if (retval == -1)
+		goto end;
 
   	usleep(COMMAND_STANDOFF);
 
@@ -64,17 +67,22 @@ int sign_proto_write_buffer(int fd, int slot, char *data_buffer, int length, int
 	memcpy(data_buffer_start,complete_buffer+ WRITE_SOURCE_3RD_OFFSET, WRITE_SOURCE_3RD_LENGTH);
 	buffer[WRITE_BUFFER_CHECKSUM_OFFSET] = sign_proto_checksum(buffer,WRITE_BUFFER_LENGTH-1); 
 	retval = write(	fd,buffer, WRITE_BUFFER_LENGTH);
+	if (retval == -1)
+		goto end;
 
   	usleep(COMMAND_STANDOFF);
 
         // Fourth Line (note the last 2 bytes are not copied).
 	buffer[3] += 0x40;
-	memcpy(data_buffer_start,complete_buffer+WRITE_SOURCE_3RD_OFFSET, WRITE_SOURCE_4TH_LENGTH);
+	memcpy(data_buffer_start,complete_buffer+WRITE_SOURCE_4TH_OFFSET, WRITE_SOURCE_4TH_LENGTH);
 	buffer[WRITE_BUFFER_CHECKSUM_OFFSET] = sign_proto_checksum(buffer,WRITE_BUFFER_LENGTH-1); 
 	retval = write(	fd,buffer, WRITE_BUFFER_LENGTH);
+	if (retval == -1)
+		goto end;
 	
-
-    return retval;
+end:
+	return retval;
+	
 }
 
 int sign_proto_activate(int fd, int num_lines) {
