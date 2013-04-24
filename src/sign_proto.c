@@ -1,6 +1,9 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
+
+
 #include "sign_proto.h"
 #include "proto.h"
 
@@ -44,6 +47,7 @@ int sign_proto_write_buffer(int fd, int slot, char *data_buffer, int length, int
         buffer[6] = action;
 	buffer[7] = length;
 
+
 	memcpy(buffer+8, complete_buffer+ WRITE_SOURCE_1ST_OFFSET,WRITE_SOURCE_1ST_LENGTH);
 	buffer[WRITE_BUFFER_CHECKSUM_OFFSET] = sign_proto_checksum(buffer,WRITE_BUFFER_LENGTH-1); 
 	retval = write(	fd,buffer, WRITE_BUFFER_LENGTH);
@@ -74,12 +78,15 @@ int sign_proto_write_buffer(int fd, int slot, char *data_buffer, int length, int
 
         // Fourth Line (note the last 2 bytes are not copied).
 	buffer[3] += 0x40;
-	memcpy(data_buffer_start,complete_buffer+WRITE_SOURCE_4TH_OFFSET, WRITE_SOURCE_4TH_LENGTH);
+	memcpy(data_buffer_start,complete_buffer+WRITE_SOURCE_4TH_OFFSET, WRITE_SOURCE_3RD_LENGTH);
+	buffer[WRITE_SOURCE_4TH_LENGTH+4] = 0;
+	buffer[WRITE_SOURCE_4TH_LENGTH+4+1] = 0;
 	buffer[WRITE_BUFFER_CHECKSUM_OFFSET] = sign_proto_checksum(buffer,WRITE_BUFFER_LENGTH-1); 
 	retval = write(	fd,buffer, WRITE_BUFFER_LENGTH);
 	if (retval == -1)
 		goto end;
-	
+
+
 end:
 	return retval;
 	
@@ -109,4 +116,36 @@ int sign_proto_checksum(unsigned char *buffer, int length) {
 	}
 
 	return(sum%256);
+}
+
+int sign_proto_set_time(int fd) {
+        int retval;
+        unsigned char buffer [10];
+	time_t current_time;
+	struct tm *local_tm;
+
+	current_time = time(NULL);
+	local_tm = localtime(&current_time);
+
+        buffer[0] = COMMAND_START;
+        buffer[1] = COMMAND_SET_TIME;
+
+        // Date
+        buffer[2] = local_tm->tm_year % 100; // year
+        buffer[3] = local_tm->tm_mon; // month;
+	buffer[4] = local_tm->tm_mday; //
+
+	// Time
+	buffer[5]= local_tm->tm_hour; //hour
+	buffer[6]= local_tm->tm_min; //hour
+	buffer[7]= local_tm->tm_sec; //second
+
+        buffer[8] = sign_proto_checksum(buffer,8);
+
+        retval = write( fd, buffer, 9);
+
+
+	return retval;
+
+
 }

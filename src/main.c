@@ -20,18 +20,22 @@ extern int optopt;
 extern int opterr;
 extern int optreset;
 
-
-
 #include "sign_proto.h"
+
+char *make_test_string(const char base, char *my_string);
 
 int main(int argc, char **argv) {
     int testfile;
     struct termios term;
     char *device_name = NULL;
+    char *my_string;
     
 
     int c;
     int digit_optind = 0;
+
+    my_string = (char *) malloc(WRITE_SOURCE_MAX_LENGTH);
+
 
     while (1) {
                int this_option_optind = optind ? optind : 1;
@@ -101,26 +105,35 @@ int main(int argc, char **argv) {
     sign_proto_attention(testfile);
     usleep(ATTENTION_DELAY);
 
-    printf("Write buffer\n");
-  
-    sign_proto_write_buffer(testfile, 0, "2", 1, SPEED_1, ACTION_HOLD);
-    usleep(COMMAND_STANDOFF);
-
-    sign_proto_write_buffer(testfile, 1, "3", 1, SPEED_1, ACTION_HOLD);
+    printf("Write buffer 1\n");
+    sign_proto_write_buffer(testfile, 0, make_test_string('a',my_string), 250, SPEED_5, ACTION_SCROLL);
     usleep(COMMAND_STANDOFF);
 /*
-    sign_proto_write_buffer(testfile, 2, "\\CRA 3", 6, SPEED_1, ACTION_HOLD);
+
+    printf("Write buffer 2\n");
+    sign_proto_write_buffer(testfile, 1, make_test_string('b',my_string), 250, SPEED_5, ACTION_SCROLL);
     usleep(COMMAND_STANDOFF);
 
-    sign_proto_write_buffer(testfile, 3, "\\CGA 4", 6, SPEED_1, ACTION_HOLD);
+    printf("Write buffer 3\n");
+    sign_proto_write_buffer(testfile, 2, make_test_string('c',my_string), 250, SPEED_5, ACTION_SCROLL);
     usleep(COMMAND_STANDOFF);
 
-    sign_proto_write_buffer(testfile, 4, "\\CYA 5", 6, SPEED_1, ACTION_HOLD);
+    printf("Write buffer 4\n");
+    sign_proto_write_buffer(testfile, 3, make_test_string('d',my_string), 250, SPEED_5, ACTION_SCROLL);
     usleep(COMMAND_STANDOFF);
 
-    sign_proto_write_buffer(testfile, 5, "\\CRA 6", 6, SPEED_1, ACTION_HOLD);
+    printf("Write buffer 5\n");
+    sign_proto_write_buffer(testfile, 4, make_test_string('e',my_string), 250, SPEED_5, ACTION_SCROLL);
+    usleep(COMMAND_STANDOFF);
+
+    printf("Write buffer 6\n");
+    sign_proto_write_buffer(testfile, 5, make_test_string('f',my_string), 250, SPEED_5, ACTION_SCROLL);
     usleep(COMMAND_STANDOFF);
 */
+
+    printf("Set Time\n");
+    sign_proto_set_time(testfile);
+    usleep(COMMAND_STANDOFF);
 
     printf("Activate\n");
     sign_proto_activate(testfile,1);
@@ -130,5 +143,21 @@ int main(int argc, char **argv) {
     close(testfile);
     return 0;
     
+}
+
+char *make_test_string(const char base, char *my_string) {
+	int i;
+
+	for(i = 0; i < WRITE_SOURCE_MAX_LENGTH; i++) {
+		if (!(i%10)) {
+			my_string[i]=base;
+		} else {
+			my_string[i]='0'+i/10;
+		}
+	}
+
+	memcpy(my_string,"\\DH:\\DM:\\DS ", 12);
+
+	return my_string;
 }
 
