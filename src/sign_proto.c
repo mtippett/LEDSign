@@ -7,6 +7,8 @@
 #include "sign_proto.h"
 #include "proto.h"
 
+#define TO_BCD(X) ((((X)/10) << 4) + ((X)%10))
+
 int sign_proto_attention(int fd) {
 
 	int retval;
@@ -120,7 +122,7 @@ int sign_proto_checksum(unsigned char *buffer, int length) {
 
 int sign_proto_set_time(int fd) {
         int retval;
-        unsigned char buffer [10];
+        unsigned char buffer [11];
 	time_t current_time;
 	struct tm *local_tm;
 
@@ -131,18 +133,21 @@ int sign_proto_set_time(int fd) {
         buffer[1] = COMMAND_SET_TIME;
 
         // Date
-        buffer[2] = local_tm->tm_year % 100; // year
-        buffer[3] = local_tm->tm_mon; // month;
-	buffer[4] = local_tm->tm_mday; //
+        buffer[2] = TO_BCD(local_tm->tm_year % 100); //year
+        buffer[3] = TO_BCD(local_tm->tm_mon); // month;
+	buffer[4] = TO_BCD(local_tm->tm_mday); //
 
 	// Time
-	buffer[5]= local_tm->tm_hour; //hour
-	buffer[6]= local_tm->tm_min; //hour
-	buffer[7]= local_tm->tm_sec; //second
+	buffer[5]= TO_BCD(local_tm->tm_hour); //hour
+	buffer[6]= TO_BCD(local_tm->tm_min); //hour
+	buffer[7]= TO_BCD(local_tm->tm_sec); //second
 
-        buffer[8] = sign_proto_checksum(buffer,8);
 
-        retval = write( fd, buffer, 9);
+        buffer[8] = 0x04;
+
+        buffer[9] = sign_proto_checksum(buffer,9);
+
+        retval = write( fd, buffer, 10);
 
 
 	return retval;

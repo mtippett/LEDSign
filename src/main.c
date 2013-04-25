@@ -105,10 +105,10 @@ int main(int argc, char **argv) {
     sign_proto_attention(testfile);
     usleep(ATTENTION_DELAY);
 
-    printf("Write buffer 1\n");
+    /*
+printf("Write buffer 1\n");
     sign_proto_write_buffer(testfile, 0, make_test_string('a',my_string), 250, SPEED_5, ACTION_SCROLL);
     usleep(COMMAND_STANDOFF);
-/*
 
     printf("Write buffer 2\n");
     sign_proto_write_buffer(testfile, 1, make_test_string('b',my_string), 250, SPEED_5, ACTION_SCROLL);
@@ -129,14 +129,15 @@ int main(int argc, char **argv) {
     printf("Write buffer 6\n");
     sign_proto_write_buffer(testfile, 5, make_test_string('f',my_string), 250, SPEED_5, ACTION_SCROLL);
     usleep(COMMAND_STANDOFF);
+
+    printf("Activate\n");
+    sign_proto_activate(testfile,6);
+    usleep(COMMAND_STANDOFF);
+
 */
 
     printf("Set Time\n");
     sign_proto_set_time(testfile);
-    usleep(COMMAND_STANDOFF);
-
-    printf("Activate\n");
-    sign_proto_activate(testfile,1);
     usleep(COMMAND_STANDOFF);
 
     printf("Close\n");
