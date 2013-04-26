@@ -93,7 +93,7 @@ int main(int argc, char **argv){
 			t1.tv_sec = t2.tv_sec;
 			t1.tv_usec = t2.tv_usec;
 
-			if(elapsedTime > 1) {
+			if(elapsedTime > 2) {
 				if (elapsedTime <1000)  {
 					printf("] [%d]\n",protocount);
 				        protocount=0;	
