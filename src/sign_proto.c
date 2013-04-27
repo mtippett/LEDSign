@@ -120,7 +120,7 @@ int sign_proto_checksum(unsigned char *buffer, int length) {
 	return(sum%256);
 }
 
-int sign_proto_set_time(int fd) {
+int sign_proto_set_time(int fd, struct tm *date) {
         int retval;
         unsigned char buffer [11];
 	time_t current_time;

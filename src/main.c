@@ -6,6 +6,7 @@
 //  Copyright (c) 2013 Tippett, Matthew. All rights reserved.
 //
 
+ #include <time.h>
 #include <stdio.h>
 #include <fcntl.h>
 #include <unistd.h>
@@ -19,6 +20,13 @@ extern int optind;
 extern int optopt;
 extern int opterr;
 extern int optreset;
+extern int getdate_err;
+
+struct tm *date = NULL;
+
+struct tm *getdate(const char *string);
+
+
 
 #include "sign_proto.h"
 
@@ -42,10 +50,11 @@ int main(int argc, char **argv) {
                int option_index = 0;
                static struct option long_options[] = {
                    {"device", required_argument, NULL, 'd'},
+                   {"time", optional_argument, NULL, 't'},
                    {0, 0, 0, 0}
                };
 
-               c = getopt_long(argc, argv, "d:0:1:2:3:4:5:6:",
+               c = getopt_long(argc, argv, "t:d:0:1:2:3:4:5:6:",
                         long_options, &option_index);
                if (c == -1)
                    break;
@@ -68,6 +77,23 @@ int main(int argc, char **argv) {
                    printf("option device with option %s\n", optarg);
 	           device_name = malloc(strlen(optarg));
 		   strcpy(device_name, optarg);
+                   break;
+
+               case 't':
+		   if (optarg != NULL) {
+			date = getdate(optarg);
+			if (date == NULL) {
+				printf("Invalid date string \"%s\"\n",optarg);
+				exit(1);
+			}	
+		   } else {
+       			time_t current_time;
+
+	        	current_time = time(NULL);
+	        	date = localtime(&current_time);
+	           }
+
+                   printf("Time f %s\n", optarg);
                    break;
 
                case '?':
@@ -135,10 +161,12 @@ printf("Write buffer 1\n");
     usleep(COMMAND_STANDOFF);
 
 */
+    if (date != NULL) {
+	printf("Set Time\n");
+	sign_proto_set_time(testfile, date);
+    	usleep(COMMAND_STANDOFF);
 
-    printf("Set Time\n");
-    sign_proto_set_time(testfile);
-    usleep(COMMAND_STANDOFF);
+    }	
 
     printf("Close\n");
     close(testfile);
