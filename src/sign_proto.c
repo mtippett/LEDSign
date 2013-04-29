@@ -2,6 +2,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
+#include <termios.h>
+#include <fcntl.h>
+#include <sys/ioctl.h>
+
 
 
 #include "sign_proto.h"
@@ -29,6 +33,8 @@ int sign_proto_write_buffer(int fd, int slot, char *data_buffer, int length, int
 	unsigned char *data_buffer_start;
 
 	int slot_address;
+
+	int terminal_flags;
 
         memset(buffer, 0,WRITE_BUFFER_LENGTH);
         memset(complete_buffer, 0,WRITE_SOURCE_MAX_LENGTH);
@@ -68,6 +74,7 @@ int sign_proto_write_buffer(int fd, int slot, char *data_buffer, int length, int
 
   	usleep(COMMAND_STANDOFF);
 
+
         // Third Line
 	buffer[3] += 0x40;
 	memcpy(data_buffer_start,complete_buffer+ WRITE_SOURCE_3RD_OFFSET, WRITE_SOURCE_3RD_LENGTH);
@@ -85,9 +92,13 @@ int sign_proto_write_buffer(int fd, int slot, char *data_buffer, int length, int
 	buffer[WRITE_SOURCE_4TH_LENGTH+4+1] = 0;
 	buffer[WRITE_BUFFER_CHECKSUM_OFFSET] = sign_proto_checksum(buffer,WRITE_BUFFER_LENGTH-1); 
 	retval = write(	fd,buffer, WRITE_BUFFER_LENGTH);
+
+
 	if (retval == -1)
 		goto end;
 
+/*
+*/
 
 end:
 	return retval;
