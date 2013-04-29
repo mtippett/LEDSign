@@ -1,0 +1,30 @@
+Inline Messages - verbatim 
+
+Colors
+\CR - Red
+\CY - Yellow
+\CG - Green
+\CA - RYG
+Color Test String \CRRed \CYYellow \CGGreen \CAMixed
+
+Date
+\DY - Year
+\DL - Month
+\DD - Date
+\DH - Hour
+\DM - Minute
+\DS - Second
+\DW - Day
+Date Test String - \DY \DL \DD \DH \DM \DS \DW
+
+Timer
+\D1 - 888 - Days to Timer
+\D2 - 88:88 - Hour:Min to Timer
+\D3 - 88:88:88 - Hour:Min:Second to Timer
+\D4 - 8888 - Seconds to Timer
+
+Command Codes [message val, markup code]
+0x03 - ~R - Rotate -
+0xff8f - ~f - Flash
+0xc0xx - bitmap - offset to image bitmap at 0xe0xx 
+
