@@ -1,1 +1,28 @@
 This describes the reverse engineered LED Sign Protocol.
+
+
+Reverse engineering was accomplished through two mechanisms.  The first 
+was to use LED Digit Board software 6.2 under VirtualBox.  The use of 
+SysInternals.org PortMon application under Windows gives a byte by 
+byte breakdown.  The second was to configure VirtualBox to use a file for the 
+the serial device.  With that, the ProtoRead application can decode and present
+the protocol stream.
+
+It is believed that the flow control is provided by the judicious use of delays
+and pauses. 
+
+
+Serial Configuration works only in Serial 38400, N-8-1
+
+All Requests start with Device Attention 0x00, followed
+
+Generic Structure is a command up to 69 bytes.  All commands start with 0x02.
+
+Known Commands
+
+COMMAND_WRITE_BUFFER  0x31
+COMMAND_ACTIVATE 0x33
+COMMAND_SET_TIME 0x34
+COMMAND_SET_DAY_FORMAT 0x35
+COMMAND_SET_TIMER 0x36
+
