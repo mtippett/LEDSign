@@ -1,0 +1,24 @@
+
+
+Colors
+\CR - Red
+\CY - Yellow
+\CG - Green
+Color Test String \CRRed \CYYellow \CGGreen \C?Mixed
+
+Date
+\DY - Year
+\DL - Month
+\DD - Date
+\DH - Hour
+\DM - Minute
+\DS - Second
+\DW - Day
+Date Test String - \DY \DL \DD \DH \DM \DS \DW 
+
+Timer
+\D1 - 888 - Days to Timer
+\D2 - 88:88 - Hour:Min to Timer
+\D3 - 88:88:88 - Hour:Min:Second to Timer
+\D4 - 8888 - Seconds to Timer
+Timer Test String - \D1 \D2 \D3 \D4
